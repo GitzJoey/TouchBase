@@ -1,3 +1,41 @@
+<?php
+session_start();
+
+if($_POST) {
+    $visitor_name = "";
+    $visitor_email = "";
+    $visitor_message = "";
+
+    if (isset($_POST['captcha_challenge']) && $_POST['captcha_challenge'] == $_SESSION['captcha_text']) {
+        if (isset($_POST['visitor_name'])) {
+            $visitor_name = filter_var($_POST['visitor_name'], FILTER_SANITIZE_STRING);
+        }
+
+        if (isset($_POST['visitor_email'])) {
+            $visitor_email = str_replace(array("\r", "\n", "%0a", "%0d"), '', $_POST['visitor_email']);
+            $visitor_email = filter_var($visitor_email, FILTER_VALIDATE_EMAIL);
+        }
+
+        if (isset($_POST['email_title'])) {
+            $email_title = filter_var($_POST['email_title'], FILTER_SANITIZE_STRING);
+        }
+
+        if (isset($_POST['visitor_message'])) {
+            $visitor_message = htmlspecialchars($_POST['visitor_message']);
+        }
+
+        $headers = 'MIME-Version: 1.0' . "\r\n"
+            . 'Content-type: text/html; charset=utf-8' . "\r\n"
+            . 'From: ' . $visitor_email . "\r\n";
+
+        if (mail('gitzjoey@gmail.com', 'Message From '.$visitor_name.'('. $visitor_email.')', $visitor_message, $headers)) {
+            echo '<p>Thank you for contacting us. You will get a reply within 24 hours.</p>';
+        } else {
+            echo '<p>We are sorry but the email did not go through.</p>';
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,6 +44,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<title>GitzJoey's House</title>
+
+    <link rel="icon" href="img/logo/stealth.png" sizes="16x16" type="image/png">
 
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">
 	<link rel="stylesheet" href="css/fontawesome-all.min.css">
@@ -152,7 +192,7 @@
 							</div>
 						</div>
 						<div class="row tm-page-4-content">
-							<div class="col-md-6 col-sm-12 tm-contact-col">
+							<div class="col-md-7 col-sm-12 tm-contact-col">
 								<div class="contact_message">
 									<form action="#contact" method="post" class="contact-form">
 										<div class="form-group">
@@ -162,13 +202,19 @@
 											<input type="email" id="contact_email" name="contact_email" class="form-control" placeholder="Email" required>
 										</div>
 										<div class="form-group">
-											<textarea id="contact_message" name="contact_message" class="form-control" rows="9" placeholder="Message" required></textarea>
+											<textarea id="contact_message" name="contact_message" class="form-control" rows="5" placeholder="Message" required></textarea>
 										</div>
+                                        <div class="form-group">
+                                            <img src="" alt="CAPTCHA" class="captcha-image">
+                                            <i class="fas fa-redo refresh-captcha"></i>
+
+                                            <input type="text" id="captcha_text" name="captcha_text" class="form-control" placeholder="<?php echo $_SESSION["captcha_text"] ?>" required>
+                                        </div>
 										<button type="submit" class="btn tm-btn-submit tm-btn ml-auto">Submit</button>
 									</form>
 								</div>
 							</div>
-							<div class="col-md-6 col-sm-12 tm-contact-col">
+							<div class="col-md-5 col-sm-12 tm-contact-col">
 								<div class="tm-address-box">
 									<p>Thanks for your interest to contact me, please note that i'm live in GMT +8 country. I'll try to contact you back as soon as possible</p>
 									<p>Please make sure you put valid email address, and also you can put others contacts so I can reach you faster.</p>
@@ -205,6 +251,11 @@
 		var sidebarVisible = false;
 		var currentPageID = "#tm-section-welcome";
 
+        var refreshButton = document.querySelector(".refresh-captcha");
+        refreshButton.onclick = function() {
+            document.querySelector(".captcha-image").src = 'captcha.php?' + Date.now();
+        }
+        
 		function setupCarousel() {
 			if($('#tm-section-2').css('display') == "none") {
 			}
@@ -274,7 +325,11 @@
 	    	$(currentPageID).fadeIn(1000);
 
 	    	var bgImg = currentNavItem.data("bgImg");
-	    	$.backstretch("img/" + bgImg);		    	
+	    	$.backstretch("img/" + bgImg);
+
+	    	if (currentNavItem.data("page") == "#tm-section-contact") {
+	    	    refreshButton.click();
+            }
   		}
 
   		function setupNavToggle() {
