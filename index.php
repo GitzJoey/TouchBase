@@ -242,7 +242,7 @@ if($_POST) {
 	<div id="preload-03"></div>
 	<div id="preload-04"></div>
 
-	<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="js/jquery-3.5.1.min.js"></script>
 	<script type="text/javascript" src="js/jquery.magnific-popup.min.js"></script>
 	<script type="text/javascript" src="js/jquery.backstretch.min.js"></script>
 	<script type="text/javascript" src="slick/slick.min.js"></script> <!-- Slick Carousel -->
