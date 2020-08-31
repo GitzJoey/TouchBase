@@ -208,7 +208,7 @@ if($_POST) {
                                             <img src="" alt="CAPTCHA" class="captcha-image">
                                             <i class="fas fa-redo refresh-captcha"></i>
 
-                                            <input type="text" id="captcha_text" name="captcha_text" class="form-control" placeholder="<?php echo $_SESSION["captcha_text"] ?>" required>
+                                            <input type="text" id="captcha_text" name="captcha_text" class="form-control" placeholder="Captcha" required>
                                         </div>
 										<button type="submit" class="btn tm-btn-submit tm-btn ml-auto">Submit</button>
 									</form>
