@@ -1,41 +1,3 @@
-<?php
-session_start();
-
-if($_POST) {
-    $visitor_name = "";
-    $visitor_email = "";
-    $visitor_message = "";
-
-    if (isset($_POST['captcha_challenge']) && $_POST['captcha_challenge'] == $_SESSION['captcha_text']) {
-        if (isset($_POST['visitor_name'])) {
-            $visitor_name = filter_var($_POST['visitor_name'], FILTER_SANITIZE_STRING);
-        }
-
-        if (isset($_POST['visitor_email'])) {
-            $visitor_email = str_replace(array("\r", "\n", "%0a", "%0d"), '', $_POST['visitor_email']);
-            $visitor_email = filter_var($visitor_email, FILTER_VALIDATE_EMAIL);
-        }
-
-        if (isset($_POST['email_title'])) {
-            $email_title = filter_var($_POST['email_title'], FILTER_SANITIZE_STRING);
-        }
-
-        if (isset($_POST['visitor_message'])) {
-            $visitor_message = htmlspecialchars($_POST['visitor_message']);
-        }
-
-        $headers = 'MIME-Version: 1.0' . "\r\n"
-            . 'Content-type: text/html; charset=utf-8' . "\r\n"
-            . 'From: ' . $visitor_email . "\r\n";
-
-        if (mail('gitzjoey@gmail.com', 'Message From '.$visitor_name.'('. $visitor_email.')', $visitor_message, $headers)) {
-            echo '<p>Thank you for contacting us. You will get a reply within 24 hours.</p>';
-        } else {
-            echo '<p>We are sorry but the email did not go through.</p>';
-        }
-    }
-}
-?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -194,7 +156,7 @@ if($_POST) {
 						<div class="row tm-page-4-content">
 							<div class="col-md-7 col-sm-12 tm-contact-col">
 								<div class="contact_message">
-									<form action="#contact" method="post" class="contact-form">
+									<form id="contact-form" action="#contact" method="post" class="contact-form">
 										<div class="form-group">
 											<input type="text" id="contact_name" name="contact_name" class="form-control" placeholder="Name" required>
 										</div>
@@ -394,6 +356,25 @@ if($_POST) {
       		}	      	
 		});
 
+        $('#contact-form').submit(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: "contact.php",
+                data: new FormData(document.querySelector('form')),
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    var ret = JSON.parse(data).return;
+                    if (ret == 'Invalid Captcha') {
+                        $('#captcha_text')[0].setCustomValidity('Invalid Captcha');
+                    } else {
+                        alert(ret);
+                    }
+                }
+            });
+        });
 	</script>
 </body>
 </html>
