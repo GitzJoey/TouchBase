@@ -50,18 +50,10 @@ if($_POST) {
 function saveContact($visitor_email, $visitor_name, $visitor_message) {
     try {
         $dbh = new PDO('sqlite:db/TouchBase');
-
-
-    } catch (Exception $e) {
-        $p = $e;
-    }
-    /*
-    if ($db = sqlite_open('db/TouchBase', 0666, $sqliteerr)) {
-        sqlite_query("INSERT INTO contact VALUES ('".$visitor_name."','".$visitor_email."'.'".$visitor_message."','".date('Y-m-d h:i:sa')."')");
+        $qry = $dbh->prepare('INSERT INTO contact (visitor_name, visitor_email, visitor_message, created_at) VALUES (?, ?, ?, ?)');
+        $qry->execute(array($visitor_name, $visitor_email, $visitor_message, date('Y-m-d h:i:s')));
         return true;
-    } else {
-        die($sqliteerr);
+    } catch (Exception $e) {
         return false;
     }
-    */
 }
