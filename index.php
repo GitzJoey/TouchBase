@@ -369,8 +369,11 @@
                     var ret = JSON.parse(data).return;
                     if (ret == 'Invalid Captcha') {
                         $('#captcha_text')[0].setCustomValidity('Invalid Captcha');
+                    } else if (ret == 'Invalid Email') {
+                        $('#contact_email')[0].setCustomValidity('Invalid Email');
                     } else {
                         alert(ret);
+                        $('#contact-form')[0].reset();
                     }
                 }
             });
