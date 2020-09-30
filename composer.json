@@ -1,0 +1,14 @@
+{
+    "name": "gitzjoey/touch-base",
+    "description": "GitzJoey's PHP Landing Page",
+    "require-dev": {
+        "guzzlehttp/guzzle": "^7.1",
+        "mailjet/mailjet-apiv3-php": "^1.5"
+    },
+    "authors": [
+        {
+            "name": "GitzJoey",
+            "email": "gitzjoey@live.com"
+        }
+    ]
+}
