@@ -8,6 +8,8 @@ if($_POST) {
     $email_title= "Contact from ";
 
     if (isset($_POST['captcha_text']) && strtoupper($_POST['captcha_text']) == $_SESSION['captcha_text']) {
+        unset($_SESSION['captcha_text']);
+
         if (isset($_POST['contact_name'])) {
             $visitor_name = filter_var($_POST['contact_name'], FILTER_SANITIZE_STRING);
         }
