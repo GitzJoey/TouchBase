@@ -1,6 +1,4 @@
 <?php
-include 'mail.php';
-
 session_start();
 
 if($_POST) {
@@ -39,7 +37,7 @@ if($_POST) {
 
         $messageHTML = '<pre>'.$visitor_message.'</pre>';
 
-        if (mail('gitzjoey@gmail.com', $email_title . $visitor_name . '(' . $visitor_email . ')', $visitor_message, $headers)) {
+        if (saveContact($visitor_email, $visitor_name, $visitor_message)) {
             echo json_encode(array('return' => 'Thank you for contacting us. You will get a reply within 24 hours.'));
         } else {
             echo json_encode(array('return' => 'We are sorry but the email did not go through.'));
@@ -47,4 +45,23 @@ if($_POST) {
     } else {
         echo json_encode(array('return' => 'Invalid Captcha'));
     }
+}
+
+function saveContact($visitor_email, $visitor_name, $visitor_message) {
+    try {
+        $dbh = new PDO('sqlite:db/TouchBase');
+
+
+    } catch (Exception $e) {
+        $p = $e;
+    }
+    /*
+    if ($db = sqlite_open('db/TouchBase', 0666, $sqliteerr)) {
+        sqlite_query("INSERT INTO contact VALUES ('".$visitor_name."','".$visitor_email."'.'".$visitor_message."','".date('Y-m-d h:i:sa')."')");
+        return true;
+    } else {
+        die($sqliteerr);
+        return false;
+    }
+    */
 }
