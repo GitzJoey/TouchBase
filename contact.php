@@ -39,7 +39,7 @@ if($_POST) {
 
         $messageHTML = '<pre>'.$visitor_message.'</pre>';
 
-        if (sendMailViaMailjet($visitor_email, $mailTo, $visitor_name, $mailToName, $email_title, $visitor_message, $messageHTML)) {
+        if (mail('gitzjoey@gmail.com', $email_title . $visitor_name . '(' . $visitor_email . ')', $visitor_message, $headers)) {
             echo json_encode(array('return' => 'Thank you for contacting us. You will get a reply within 24 hours.'));
         } else {
             echo json_encode(array('return' => 'We are sorry but the email did not go through.'));
